@@ -9,12 +9,14 @@ const { BrowserWindow } = require('electron');
 
 let settings = {};
 let transparency = false;
+let frame = true;
 let ewp = false;
 try {
-  settings = require(join(__dirname, '../../settings/pc-general.json'));
+  settings = require(join(__dirname, '../settings/pc-general.json'));
   transparency = settings.transparentWindow;
+  frame = settings.windowFrame;
   ewp = settings.experimentalWebPlatform;
-} catch (e) {}
+} catch (e) { }
 
 class PatchedBrowserWindow extends BrowserWindow {
   // noinspection JSAnnotator - Make JetBrains happy
@@ -41,8 +43,11 @@ class PatchedBrowserWindow extends BrowserWindow {
 
       if (transparency) {
         opts.transparent = true;
-        opts.frame = process.platform === 'win32' ? false : opts.frame;
         delete opts.backgroundColor;
+      }
+
+      if (!frame) {
+        opts.frame = false;
       }
 
       if (ewp) {

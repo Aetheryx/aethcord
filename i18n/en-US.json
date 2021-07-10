@@ -89,6 +89,8 @@
   "POWERCORD_SETTINGS_TRANSPARENT": "Transparent Window",
   "POWERCORD_SETTINGS_TRANSPARENT_DESC": "Makes any windows opened by Discord transparent, useful for theming.\n****WARNING:**** This will break **window snapping** on Windows. **Hardware acceleration** must be turned **off** on Linux. You may encounter issues and have black background in some cases, like when the window is cut off at the top, or the bottom due to monitor resolution or when devtools are open and docked. **Requires restart**.",
   "POWERCORD_SETTINGS_TRANSPARENT_GLASSCORD": "It looks like you have Glasscord installed, which means you can't update this setting directly within Powercord. Learn more about configuring Glasscord [here]({glasscordCfgUrl})",
+  "POWERCORD_SETTINGS_FRAME": "Window Frame",
+  "POWERCORD_SETTINGS_FRAME_DESC": "Shows a frame around the Discord window which contains the minimize, maximize and close buttons. Disable this option to remove the frame.",
   "POWERCORD_SNIPPET_APPLIED": "Snippet Applied",
   "POWERCORD_SNIPPET_APPLY": "Apply Snippet",
   "POWERCORD_SNIPPET_LINE1": "Snippet from #css-snippets applied the {date, date, medium} at {date, time, medium}",

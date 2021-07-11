@@ -18,6 +18,16 @@ module.exports = {
     const name = args.shift().toLowerCase();
     const value = args.join(' ').replace(/\\n/g, '\n');
 
+    if (!name || !(/\w/).test(name)) {
+      return {
+        send: false,
+        result: {
+          type: 'rich',
+          title: 'Cannot create tag with empty name'
+        }
+      };
+    }
+
     if (powercord.api.commands.find(c => c.command === name)) {
       return {
         send: false,

@@ -19,3 +19,6 @@ settings/*.json
 config.json
 *injected.txt
 *.nogit.*
+
+# macOS
+.DS_Store

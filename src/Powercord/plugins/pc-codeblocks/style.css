@@ -38,7 +38,7 @@
 }
 
 .powercord-codeblock-copy-btn {
-  color: #fff;
+  color: var(--text-normal);
   border-radius: 4px;
 
   line-height: 20px;
@@ -58,6 +58,7 @@
 }
 
 .powercord-codeblock-copy-btn.copied {
+  color: #fff;
   background-color: #43b581;
   opacity: 1;
 }

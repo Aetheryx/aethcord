@@ -18,7 +18,9 @@ const KnownLinuxPaths = Object.freeze([
   '/usr/lib64/discord-canary',
   '/opt/discord-canary',
   '/opt/DiscordCanary',
-  `${homedir}/.local/bin/DiscordCanary` // https://github.com/powercord-org/powercord/pull/370
+  `${homedir}/.local/bin/DiscordCanary`, // https://github.com/powercord-org/powercord/pull/370
+  '/var/lib/flatpak/app/com.discordapp.DiscordCanary/current/active/files/discord-canary', // flatpak system install https://github.com/flathub/com.discordapp.DiscordCanary
+  `${homedir}/.local/share/flatpak/app/com.discordapp.DiscordCanary/current/active/files/discord-canary` // flatpak user install
 ]);
 
 

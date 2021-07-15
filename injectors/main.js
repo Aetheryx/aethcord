@@ -21,6 +21,12 @@ exports.inject = async ({ getAppDir }) => {
     console.log(`${AnsiEscapes.YELLOW}NOTE:${AnsiEscapes.RESET} If you already have BetterDiscord or another client mod injected, Powercord cannot run along with it!`);
     console.log('Read our FAQ for more details: https://powercord.dev/faq#bd-and-pc');
     return false;
+  } else if (appDir.includes('flatpak')) {
+    const command = appDir.startsWith('/var') ? 'sudo flatpak override' : 'flatpak override --user';
+
+    console.log(`${AnsiEscapes.YELLOW}NOTE:${AnsiEscapes.RESET} It seems like your Discord Canary install is a flatpak`);
+    console.log('      You need to update its permissions so it can access the powercord directory');
+    console.log(`      You can do so by running ${AnsiEscapes.YELLOW}${command} --filesystem=${join(__dirname, '..')} com.discordapp.DiscordCanary${AnsiEscapes.RESET}`);
   }
 
   await mkdir(appDir);

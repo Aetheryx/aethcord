@@ -21,10 +21,10 @@ const { inject, uninject } = require('powercord/injector');
 const { open: openModal } = require('powercord/modal');
 
 const { writeFile } = require('fs').promises;
-const { existsSync } = require('fs');
+const { existsSync, mkdirSync } = require('fs');
 
 const { get } = require('powercord/http');
-const { extname, resolve } = require('path');
+const { extname, resolve, join } = require('path');
 const { parse } = require('url');
 
 const { clipboard } = require('electron');
@@ -225,6 +225,7 @@ module.exports = class EmojiUtility extends Plugin {
     /* Default settings */
     this.settings.set('useEmbeds', this.settings.get('useEmbeds', false));
     this.settings.set('displayLink', this.settings.get('displayLink', true));
+    this.settings.set('createGuildFolder', this.settings.get('createGuildFolder', true));
     this.settings.set('includeIdForSavedEmojis', this.settings.get('includeIdForSavedEmojis', true));
     this.settings.set('defaultCloneIdUseCurrent', this.settings.get('defaultCloneIdUseCurrent', false));
 
@@ -616,22 +617,42 @@ module.exports = class EmojiUtility extends Plugin {
     powercord.api.commands.registerCommand({
       command: 'saveemote',
       description: 'Save emotes to a specified directory',
-      usage: '{c} [emote]',
+      usage: '{c} [--server | emote]',
       executor: async (args) => {
-        if (!this.settings.get('filePath')) {
+        let filePath = this.settings.get('filePath');
+        if (!filePath) {
           return this.replyError('Please set your save directory in the settings');
         }
 
-        if (!existsSync(this.settings.get('filePath'))) {
+        if (!existsSync(filePath)) {
           return this.replyError('The specified save directory does no longer exist, please update it in the settings');
         }
 
-        const object = this.findEmojisForCommand(args);
-        if (!object) {
-          return;
-        }
+        let foundEmojis, notFoundEmojis;
+        if (args.includes('--server')) {
+          const { guild_id } = this.getChannel(this.getChannelId());
+          if (!guild_id) {
+            return this.replyError('The --server flag can not be used in dms');
+          }
 
-        const { foundEmojis, notFoundEmojis } = object;
+          if (this.settings.get('createGuildFolders')) {
+            const guild = this.getGuildByIdOrName(guild_id);
+
+            filePath = join(filePath, guild.name);
+            if (!existsSync(filePath)) {
+              mkdirSync(filePath);
+            }
+          }
+
+          foundEmojis = this.getEmojis(guild_id);
+          notFoundEmojis = [];
+        } else {
+          const object = this.findEmojisForCommand(args);
+          if (!object) {
+            return;
+          }
+          ({ foundEmojis, notFoundEmojis } = object);
+        }
 
         if (notFoundEmojis.length > 0) {
           return this.replyError(`**${notFoundEmojis.length}** of the provided arguments ${notFoundEmojis.length === 1 ? 'is not a custom emote' : 'are not custom emotes'}`);
@@ -642,7 +663,7 @@ module.exports = class EmojiUtility extends Plugin {
             try {
               const name = this.settings.get('includeIdForSavedEmojis') ? `${emoji.name} (${emoji.id})` : emoji.name;
 
-              await writeFile(resolve(this.settings.get('filePath'), name + extname(parse(emoji.url).pathname)), (await get(emoji.url)).raw);
+              await writeFile(resolve(filePath, name + extname(parse(emoji.url).pathname)), (await get(emoji.url)).raw);
 
               this.replySuccess(`Downloaded ${this.getFullEmoji(emoji)}`);
             } catch (error) {
@@ -665,7 +686,7 @@ module.exports = class EmojiUtility extends Plugin {
             try {
               const name = this.settings.get('includeIdForSavedEmojis') ? `${emoji.name} (${emoji.id})` : emoji.name;
 
-              await writeFile(resolve(this.settings.get('filePath'), name + extname(parse(emoji.url).pathname)), (await get(emoji.url)).raw);
+              await writeFile(resolve(filePath, name + extname(parse(emoji.url).pathname)), (await get(emoji.url)).raw);
             } catch (error) {
               console.error(error);
 

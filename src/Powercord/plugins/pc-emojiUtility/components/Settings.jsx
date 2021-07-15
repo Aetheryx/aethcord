@@ -87,6 +87,14 @@ module.exports = class EmojiUtilitySettings extends React.Component {
         </TextInput>
 
         <SwitchItem
+          note='Whether a separate folder should be created when downloading emotes with the --server flag.'
+          value={this.props.getSetting('createGuildFolders')}
+          onChange={() => this.props.toggleSetting('createGuildFolders')}
+        >
+          Create separate folder when exporting with --server flag
+        </SwitchItem>
+
+        <SwitchItem
           note='Whether saving emotes should contain the id of the emote, this prevents overwriting old saved emotes.'
           value={this.props.getSetting('includeIdForSavedEmojis')}
           onChange={() => this.props.toggleSetting('includeIdForSavedEmojis')}

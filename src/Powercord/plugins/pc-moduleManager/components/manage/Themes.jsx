@@ -98,7 +98,7 @@ class Themes extends Base {
   }
 
   getItems () {
-    return this._sortItems([ ...powercord.styleManager.themes.values() ].filter(t => t.isTheme));
+    return this._sortItems([ ...powercord.styleManager.themes.values() ].filter(t => t.isTheme), 'theme');
   }
 }
 

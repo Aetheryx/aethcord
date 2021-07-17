@@ -2,15 +2,19 @@ const { join } = require('path');
 const { shell } = require('electron');
 const { React, getModule, contextMenu, i18n: { Messages } } = require('powercord/webpack');
 const { Button, Tooltip, ContextMenu, Divider, Icons: { Overflow } } = require('powercord/components');
-const { TextInput } = require('powercord/components/settings');
+const { TextInput, SelectInput } = require('powercord/components/settings');
 
 class Base extends React.Component {
   constructor () {
     super();
     this.state = {
       key: `${this.constructor.name.toUpperCase()}`,
-      search: ''
+      search: '',
+      show: null
     };
+    this.options = [ { label: Messages.POWERCORD_SETTINGS_ENABLED,
+      value: 'Enabled' }, { label: Messages.POWERCORD_SETTINGS_DISABLED,
+      value: 'Disabled' } ];
   }
 
   render () {
@@ -61,6 +65,11 @@ class Base extends React.Component {
     );
   }
 
+  onSelectInputChange (val) {
+    this.setState((prev) => ({ ...prev,
+      show: val ? val.value : null }));
+  }
+
   renderSearch () {
     return (
       <div className='powercord-entities-manage-search'>
@@ -71,6 +80,16 @@ class Base extends React.Component {
         >
           {Messages[`POWERCORD_${this.state.key}_SEARCH`]}
         </TextInput>
+
+        <SelectInput
+          value={this.state.show}
+          onChange={(val) => this.onSelectInputChange(val)}
+          options={this.options}
+          searchable={false}
+          clearable
+        >
+          {Messages.POWERCORD_SETTINGS_SHOW}
+        </SelectInput>
       </div>
     );
   }
@@ -114,7 +133,24 @@ class Base extends React.Component {
     throw new Error('Not implemented');
   }
 
-  _sortItems (items) {
+  _sortItems (items, type) {
+    const disabledPlugins = powercord.settings.get('disabledPlugins', []);
+    const { disabledThemes } = powercord.styleManager;
+
+    if (this.state.show === 'Enabled') {
+      if (type === 'plugin') {
+        items = items.filter(p => !disabledPlugins.includes(p.entityID));
+      } else if (type === 'theme') {
+        items = items.filter(p => !disabledThemes.includes(p.entityID));
+      }
+    } else if (this.state.show === 'Disabled') {
+      if (type === 'plugin') {
+        items = items.filter(p => disabledPlugins.includes(p.entityID));
+      } else if (type === 'theme') {
+        items = items.filter(p => disabledThemes.includes(p.entityID));
+      }
+    }
+
     if (this.state.search !== '') {
       const search = this.state.search.toLowerCase();
       items = items.filter(p =>

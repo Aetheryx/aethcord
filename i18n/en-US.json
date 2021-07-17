@@ -161,5 +161,8 @@
   "POWERCORD_UPDATES_UP_TO_DATE": "Powercord is up to date.",
   "POWERCORD_UPDATE_PASSPHRASE": "Update passphrase",
   "POWERCORD_UPDATE_PASSPHRASE_MODAL1": "This passphrase will be used to encrypt your data before sending it to Powercord's servers. It's recommended to set one, but you can just leave this empty to send your data unencrypted.",
-  "POWERCORD_UPDATE_PASSPHRASE_MODAL2": "If you're already using sync on other machines, put the same passphrase you used. **Using another passphrase will overwrite old data, so be careful**."
+  "POWERCORD_UPDATE_PASSPHRASE_MODAL2": "If you're already using sync on other machines, put the same passphrase you used. **Using another passphrase will overwrite old data, so be careful**.",
+  "POWERCORD_SETTINGS_SHOW": "Show...",
+  "POWERCORD_SETTINGS_ENABLED": "Enabled",
+  "POWERCORD_SETTINGS_DISABLED": "Disabled"
 }

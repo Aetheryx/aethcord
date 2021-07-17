@@ -21,7 +21,7 @@ class Plugins extends Base {
   }
 
   getItems () {
-    return this._sortItems([ ...powercord.pluginManager.plugins.values() ]);
+    return this._sortItems([ ...powercord.pluginManager.plugins.values() ], 'plugin');
   }
 
   fetchMissing () { // @todo: better impl + i18n
